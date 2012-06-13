@@ -22,6 +22,7 @@
 #include "mmc_ops.h"
 #include "sd_ops.h"
 
+#include "../debug_mmc.h"
 static const unsigned int tran_exp[] = {
 	10000,		100000,		1000000,	10000000,
 	0,		0,		0,		0
@@ -106,6 +107,8 @@ static int mmc_decode_cid(struct mmc_card *card)
 			mmc_hostname(card->host), card->csd.mmca_vsn);
 		return -EINVAL;
 	}
+
+	MMC_printk("cid.prv 0x%x", card->cid.prv);
 
 	return 0;
 }
@@ -253,7 +256,7 @@ static int mmc_read_ext_csd(struct mmc_card *card)
 			ext_csd[EXT_CSD_SEC_CNT + 1] << 8 |
 			ext_csd[EXT_CSD_SEC_CNT + 2] << 16 |
 			ext_csd[EXT_CSD_SEC_CNT + 3] << 24;
-
+		MMC_printk("ext_csd.sectors 0x%x prod_name %s BOOT_SIZE_MULTI 0x%x", card->ext_csd.sectors, card->cid.prod_name, ext_csd[EXT_CSD_BOOT_SIZE_MULTI]);
 		card->ext_csd.sec_count = card->ext_csd.sectors;
 
 		/* Cards with density > 2GiB are sector addressed */

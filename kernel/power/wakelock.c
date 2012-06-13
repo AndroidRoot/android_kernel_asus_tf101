@@ -291,10 +291,10 @@ static void suspend(struct work_struct *work)
 		pr_info("suspend: enter suspend\n");
 
 	init_timer_on_stack(&suspend_timer);
-	suspend_timer.expires = jiffies + HZ * 9;
+	suspend_timer.expires = jiffies + HZ * 15;
 	suspend_timer.function = suspend_worker_timeout;
 	add_timer(&suspend_timer);
-	watchdog_enable(11);
+	watchdog_enable(17);
 	suspend_process_going=1;
 	auto_dump_kernel_log();
 	disable_irq(gpio_to_irq(TEGRA_GPIO_PX5));

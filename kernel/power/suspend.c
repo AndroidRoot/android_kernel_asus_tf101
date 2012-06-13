@@ -163,10 +163,10 @@ static int suspend_prepare(void)
 	del_timer_sync(&suspend_timer);
 	destroy_timer_on_stack(&suspend_timer);
 	init_timer_on_stack(&suspend_timer);
-	suspend_timer.expires = jiffies + HZ * 9;
+	suspend_timer.expires = jiffies + HZ * 15;
 	suspend_timer.function = suspend_worker_timeout;
 	add_timer(&suspend_timer);
-	watchdog_enable(11);
+	watchdog_enable(17);
 
 	if (!error)
 		return 0;

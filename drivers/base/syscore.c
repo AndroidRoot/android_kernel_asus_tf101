@@ -105,10 +105,10 @@ void syscore_resume(void)
 		}
 
 	init_timer_on_stack(&suspend_timer);
-	suspend_timer.expires = jiffies + HZ * 12;
+	suspend_timer.expires = jiffies + HZ * 15;
 	suspend_timer.function = suspend_worker_timeout;
 	add_timer(&suspend_timer);
-	watchdog_enable(14);
+	watchdog_enable(17);
 	auto_dump_kernel_log();
 }
 EXPORT_SYMBOL_GPL(syscore_resume);

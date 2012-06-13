@@ -36,12 +36,13 @@
 #include <linux/mmc/host.h>
 #include <linux/mmc/mmc.h>
 #include <linux/mmc/sd.h>
-#include <linux/gpio.h>
 
 #include <asm/system.h>
 #include <asm/uaccess.h>
 
+#include <linux/gpio.h>
 #include "queue.h"
+#include "../debug_mmc.h"
 
 MODULE_ALIAS("mmc:block");
 #ifdef MODULE_PARAM_PREFIX
@@ -58,7 +59,7 @@ static DEFINE_MUTEX(block_mutex);
 #define INAND_CMD38_ARG_SECTRIM1 0x81
 #define INAND_CMD38_ARG_SECTRIM2 0x88
 
-#define MMC_CMD_RETRIES 3
+#define MMC_CMD_RETRIES 10
 /*
  * The defaults come from config options but can be overriden by module
  * or bootarg options.
@@ -595,7 +596,6 @@ static int mmc_blk_issue_rw_rq(struct mmc_queue *mq, struct request *req)
 		ret = __blk_end_request(req, 0, brq.data.bytes_xfered);
 		spin_unlock_irq(&md->lock);
 	}
-
 err:
 	mmc_release_host(card->host);
 
@@ -814,6 +814,8 @@ static void mmc_blk_remove(struct mmc_card *card)
 	mmc_set_drvdata(card, NULL);
 #ifdef CONFIG_MMC_BLOCK_DEFERRED_RESUME
 	mmc_set_bus_resume_policy(card->host, 0);
+	card->host->bus_resume_flags &= ~MMC_BUSRESUME_NEEDS_RESUME;
+	MMC_printk("%s: bus_resume_flags 0x%x", mmc_hostname(card->host), card->host->bus_resume_flags);
 #endif
 }
 
