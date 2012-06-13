@@ -260,8 +260,6 @@ struct timer_list suspend_timer;
 extern void watchdog_enable(int sec);
 extern void watchdog_disable(void);
 int suspend_process_going=0;
-extern void auto_dump_kernel_log(void);
-extern void clean_iram_log(char *string);
 static int wake_unlock_loop=0;
 extern  struct device *temp_dev;
 void suspend_worker_timeout(unsigned long data)
@@ -296,7 +294,6 @@ static void suspend(struct work_struct *work)
 	add_timer(&suspend_timer);
 	watchdog_enable(17);
 	suspend_process_going=1;
-	auto_dump_kernel_log();
 	disable_irq(gpio_to_irq(TEGRA_GPIO_PX5));
 	ret = pm_suspend(requested_suspend_state);
 	enable_irq(gpio_to_irq(TEGRA_GPIO_PX5));
@@ -304,7 +301,6 @@ static void suspend(struct work_struct *work)
 	watchdog_disable();
 	del_timer_sync(&suspend_timer);
 	destroy_timer_on_stack(&suspend_timer);
-	clean_iram_log("exit suspend");
 	if (debug_mask & DEBUG_EXIT_SUSPEND) {
 		struct timespec ts;
 		struct rtc_time tm;

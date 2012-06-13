@@ -40,7 +40,6 @@ extern struct timer_list suspend_timer;
 extern void suspend_worker_timeout(unsigned long data);
 extern void watchdog_enable(int sec);
 extern void watchdog_disable(void);
-extern void auto_dump_kernel_log(void);
 #ifdef CONFIG_PM_SLEEP
 /**
  * syscore_suspend - Execute all the registered system core suspend callbacks.
@@ -109,7 +108,6 @@ void syscore_resume(void)
 	suspend_timer.function = suspend_worker_timeout;
 	add_timer(&suspend_timer);
 	watchdog_enable(17);
-	auto_dump_kernel_log();
 }
 EXPORT_SYMBOL_GPL(syscore_resume);
 #endif /* CONFIG_PM_SLEEP */
