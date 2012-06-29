@@ -235,11 +235,12 @@ typedef struct dhd_cmn {
 	#define DHD_PM_RESUME_WAIT_INIT(a) DECLARE_WAIT_QUEUE_HEAD(a);
 	#define _DHD_PM_RESUME_WAIT(a, b) do {\
 			int retry = 0; \
-			smp_mb(); \
+			SMP_RD_BARRIER_DEPENDS(); \
 			while (dhd_mmc_suspend && retry++ != b) { \
-				wait_event_interruptible_timeout(a, FALSE, HZ/100); \
+				SMP_RD_BARRIER_DEPENDS(); \
+				wait_event_interruptible_timeout(a, !dhd_mmc_suspend, HZ/100); \
 			} \
-		} 	while (0)
+		} while (0)
 	#define DHD_PM_RESUME_WAIT(a) 		_DHD_PM_RESUME_WAIT(a, 200)
 	#define DHD_PM_RESUME_WAIT_FOREVER(a) 	_DHD_PM_RESUME_WAIT(a, ~0)
 	#define DHD_PM_RESUME_RETURN_ERROR(a)	do { if (dhd_mmc_suspend) return a; } while (0)
@@ -363,7 +364,7 @@ void dhd_osl_detach(osl_t *osh);
  * Returned structure should have bus and prot pointers filled in.
  * bus_hdrlen specifies required headroom for bus module header.
  */
-extern dhd_pub_t *dhd_attach(osl_t *osh, struct dhd_bus *bus, uint bus_hdrlen);
+extern dhd_pub_t *dhd_attach(osl_t *osh, struct dhd_bus *bus, uint bus_hdrlen, void *dev);
 extern int dhd_net_attach(dhd_pub_t *dhdp, int idx);
 
 /* Indication from bus module regarding removal/absence of dongle */
@@ -422,6 +423,7 @@ extern int dhd_dev_pno_enable(struct net_device *dev,  int pfn_enabled);
 extern int dhd_dev_get_pno_status(struct net_device *dev);
 extern int dhd_get_dtim_skip(dhd_pub_t *dhd);
 extern bool dhd_check_ap_wfd_mode_set(dhd_pub_t *dhd);
+extern bool dhd_os_check_hang(dhd_pub_t *dhdp, int ifidx, int ret);
 
 #define DHD_UNICAST_FILTER_NUM		0
 #define DHD_BROADCAST_FILTER_NUM	1

@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux/arm 2.6.39.4 Kernel Configuration
-# Tue Mar 20 17:11:51 2012
+# Fri Jun 29 15:48:26 2012
 #
 CONFIG_ARM=y
 CONFIG_HAVE_PWM=y
@@ -1155,8 +1155,13 @@ CONFIG_WLAN=y
 CONFIG_BCMDHD=y
 CONFIG_BCMDHD_FW_DIR="/system/vendor/firmware"
 CONFIG_BCMDHD_NVRAM_DIR="/system/etc"
+# CONFIG_BCMDHD_WEXT is not set
+CONFIG_BCMDHD_CFG80211=y
+# CONFIG_BCMDHD_NOAPI is not set
 CONFIG_BCMDHD_WIFI_CONTROL_FUNC=y
-# CONFIG_BCMDHD_HW_OOB is not set
+CONFIG_BCMDHD_HW_OOB=y
+CONFIG_BCMDHD_CSCAN_ENABLE=y
+CONFIG_BCMDHD_INSMOD_NO_FW_LOAD=y
 # CONFIG_HOSTAP is not set
 # CONFIG_IPW2100 is not set
 # CONFIG_IWM is not set
