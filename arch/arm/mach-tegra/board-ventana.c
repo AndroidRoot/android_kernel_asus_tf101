@@ -707,6 +707,8 @@ void tegra_booting_info(void )
 	}
 }
 
+extern void bluesleep_setup_uart_port(struct platform_device *uart_dev);
+
 static void __init tegra_ventana_init(void)
 {
 	struct board_info BoardInfo;
@@ -757,6 +759,7 @@ static void __init tegra_ventana_init(void)
 	ventana_emc_init();
 
 	ventana_setup_bluesleep();
+        bluesleep_setup_uart_port(&tegra_uartc_device);
 //	tegra_release_bootloader_fb();
 }
 
